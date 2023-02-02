@@ -202,7 +202,6 @@ hist(d_fit_icap_mort$left_period_e - d_fit_icap_mort$left_age_e,breaks=100)
 dev.off()
 
 
-obs_sample_sizes_desc <- read.csv("../obs_sample_sizes_description.csv")
-
+# obs_sample_sizes_desc <- read.csv("../obs_sample_sizes_description.csv")
 # print(xtable(obs_sample_sizes_desc),include.rownames=FALSE)
 
