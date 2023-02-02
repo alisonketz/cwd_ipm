@@ -125,6 +125,21 @@ d_fit_hunt_neg <- cwd_df[cwd_df$teststatus == 0, ]
 n_fit_hunt_pos <- nrow(d_fit_hunt_pos)
 n_fit_hunt_neg <- nrow(d_fit_hunt_neg)
 
+####################################################
+### For the deer that are fast mortalities, 
+### setting up an indicator to change 
+### which likelihood calculation to prevent bad indexing
+### sum(d_fit_icap_mort$left_age_e == d_fit_icap_mort$right_age_r)
+#####################################################
+
+d_fit_sus_mort_posttest$fast <- ifelse(d_fit_sus_mort_posttest$left_age_e ==
+                                       d_fit_sus_mort_posttest$right_age_r,1,0)
+
+
+d_fit_icap_mort$fast <- ifelse(d_fit_icap_mort$left_age_e ==
+                                       d_fit_icap_mort$right_age_r,1,0)
+
+
 ###############################################################
 ###
 ### all data cases
