@@ -4,6 +4,25 @@
 ###
 #########################################################################################################################3
 
+
+####################################################
+###
+### setup age at harvest to estimate period effects
+###
+###################################################
+
+df_age_nocwd$birthweek <-(lubridate::interval(birth_start,df_age_nocwd$birth_date) %/% weeks(1)) + 1
+df_age_nocwd$birthmonth <-(lubridate::interval(birth_start,df_age_nocwd$birth_date) %/% months(1)) + 1
+
+df_age_nocwd$age2date_weeks <-(lubridate::interval(birth_start,df_age_nocwd$birth_date) %/% weeks(1))
+df_age_nocwd$age2date_months <-(lubridate::interval(birth_start,df_age_nocwd$birth_date) %/% months(1))
+
+####################################################
+###
+### setup for age at harvest pop model
+###
+###################################################
+
 # n_year <- length(2002:2021)
 n_year <- length(1992:2021)
 n_ageclass <- 7

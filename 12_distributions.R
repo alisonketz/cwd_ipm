@@ -2775,7 +2775,7 @@ dAAH <- nimble::nimbleFunction(
         a = integer(0), #e, age of harvest
         sex = integer(0),
         age2date = integer(0),
-        n_ind = integer=(0),
+        n_ind = integer(0),
         beta_sex = double(0),
         beta0_sus = double(0),
         beta0_inf = double(0),
@@ -2788,7 +2788,6 @@ dAAH <- nimble::nimbleFunction(
         period_lookup=double(1),
         f_period_foi=double(1),
         m_period_foi=double(1),
-        space = double(0),
         log = double()
         ) {
 
@@ -2818,19 +2817,19 @@ dAAH <- nimble::nimbleFunction(
         )
 
     #force of infection infection hazard
-    lam_foi[1:a] <- exp(rep(space, a) +
+    lam_foi[1:a] <- exp(
         sex * (f_age_foi[age_lookup_f[1:a]] +
             f_period_foi[period_lookup[(1 + age2date):(a + age2date)]]) +
         (1 - sex) * (m_age_foi[age_lookup_m[1:a]] +
             m_period_foi[period_lookup[(1 + age2date):(a + age2date)]])
-        )
+                        )
     #######################################
     ### calculating the joint likelihood
     #######################################
 
     lik_temp[1] <- lam_foi[1] *
                    exp(-sum(lam_inf[1:(a - 1)])) *
-                   lam_inf[a] 
+                   lam_inf[a]
 
     for (k in (2):(a - 1)) {
         lik_temp[k] <- lam_foi[k] *
@@ -2859,7 +2858,7 @@ dAAH <- nimble::nimbleFunction(
 
 nimble::registerDistributions(list(
     dAAH = list(
-        BUGSdist = 'dAAH(a,sex,age2date,n_ind,beta_sex,beta0_sus,beta0_inf,age_effect_surv,period_effect_surv,f_age_foi,m_age_foi,age_lookup_f,age_lookup_m,f_period_foi,m_period_foi,period_lookup,space)',
+        BUGSdist = 'dAAH(a,sex,age2date,n_ind,beta_sex,beta0_sus,beta0_inf,age_effect_surv,period_effect_surv,f_age_foi,m_age_foi,age_lookup_f,age_lookup_m,f_period_foi,m_period_foi,period_lookup)',
         types = c("a = integer(0)",
                   "sex = integer(0)",
                   "age2date = integer(0)",
@@ -2876,7 +2875,6 @@ nimble::registerDistributions(list(
                   "period_lookup = double(1)",
                   "f_period_foi = double(1)",
                   "m_period_foi = double(1)",
-                  "space = double(0)",
                   "log = double()"
                   ),
         discrete = TRUE
@@ -2886,27 +2884,25 @@ nimble::registerDistributions(list(
 ### for a user-defined distribution
 assign('dAAH', dAAH, envir = .GlobalEnv)
 
-# i=1
-# dAAH(#x = 1,
-#       a = d_fit_idead$left_age_e[i],
-#         sex = d_fit_idead$sex[i],
-#         age2date = idead_age2date[i],
-#         n_ind = 
-#         beta_sex = beta_sex,
-#         beta0_sus = beta0_sus,
-#         beta0_inf = beta0_inf,
-#         age_effect_surv = age_effect_survival_test,
-#         period_effect_surv = period_effect_survival_test,
-#         f_age_foi = f_age_foi,
-#         m_age_foi = m_age_foi,
-#         age_lookup_f = age_lookup_col_f,
-#         age_lookup_m = age_lookup_col_m,
-#         period_lookup = period_lookup,
-#         f_period_foi = f_period_foi,
-#         m_period_foi = m_period_foi,
-#         space = 0,
-#         log = TRUE
-#         )
+dAAH(x = 1,
+      a = df_age_nocwd$ageweeks[i],
+        sex = df_age_nocwd$sexnum[i],
+        age2date = df_age_nocwd$age2date_weeks[i],
+        n_ind = df_age_nocwd$n[i],
+        beta_sex = beta_sex,
+        beta0_sus = beta0_sus,
+        beta0_inf = beta0_inf,
+        age_effect_surv = age_effect_survival_test,
+        period_effect_surv = period_effect_survival_test,
+        f_age_foi = f_age_foi,
+        m_age_foi = m_age_foi,
+        age_lookup_f = age_lookup_col_f,
+        age_lookup_m = age_lookup_col_m,
+        period_lookup = period_lookup,
+        f_period_foi = f_period_foi,
+        m_period_foi = m_period_foi,
+        log = TRUE
+        )
 
 # test <- c()
 # for(i in 1:nrow(d_fit_idead)){
