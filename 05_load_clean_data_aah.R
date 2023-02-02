@@ -215,8 +215,7 @@ df_age_nocwd$sexnum <- as.numeric(as.character(df_age_nocwd$sexnum))
 
 #age2date - period effects
 #calculating the birth weeks in period notation
-df_age_nocwd$birthweek
-df_age_nocwd$agenum <- as.numeric(df_age_nocwd$age)
+df_age_nocwd$agenum <- as.numeric(as.character(df_age_nocwd$age))
 
 df_age_nocwd$birth_date <- NA
 for(j in 1:dim(df_age_nocwd)[1]) {
@@ -225,7 +224,6 @@ for(j in 1:dim(df_age_nocwd)[1]) {
                                         "-05-15")
 }
 df_age_nocwd$birth_date <- as.Date(df_age_nocwd$birth_date)
-
 
 ####################################################################################
 ###

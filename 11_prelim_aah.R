@@ -11,11 +11,14 @@
 ###
 ###################################################
 
-df_age_nocwd$birthweek <-(lubridate::interval(birth_start,df_age_nocwd$birth_date) %/% weeks(1)) + 1
-df_age_nocwd$birthmonth <-(lubridate::interval(birth_start,df_age_nocwd$birth_date) %/% months(1)) + 1
+df_age_nocwd$birthweek <-floor(as.duration(ymd("1992-05-15") %--% ymd(df_age_nocwd$birth_date))/dweeks(1))
+df_age_nocwd$birthmonth <-floor(as.duration(ymd("1992-05-15") %--% ymd(df_age_nocwd$birth_date))/dmonths(1))
+df_age_nocwd$age2date_weeks <-floor(as.duration(ymd("1992-05-15") %--% ymd(df_age_nocwd$birth_date))/dweeks(1))-1
+df_age_nocwd$age2date_months <-floor(as.duration(ymd("1992-05-15") %--% ymd(df_age_nocwd$birth_date))/dmonths(1))-1
 
-df_age_nocwd$age2date_weeks <-(lubridate::interval(birth_start,df_age_nocwd$birth_date) %/% weeks(1))
-df_age_nocwd$age2date_months <-(lubridate::interval(birth_start,df_age_nocwd$birth_date) %/% months(1))
+d_fit_age_nocwd <- df_age_nocwd[df_age_nocwd$n>0,]
+
+# d_fit_age_nocwd[is.na(test),]
 
 ####################################################
 ###

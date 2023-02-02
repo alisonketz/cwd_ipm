@@ -2817,8 +2817,7 @@ dAAH <- nimble::nimbleFunction(
         )
 
     #force of infection infection hazard
-    lam_foi[1:a] <- exp(
-        sex * (f_age_foi[age_lookup_f[1:a]] +
+    lam_foi[1:a] <- exp(sex * (f_age_foi[age_lookup_f[1:a]] +
             f_period_foi[period_lookup[(1 + age2date):(a + age2date)]]) +
         (1 - sex) * (m_age_foi[age_lookup_m[1:a]] +
             m_period_foi[period_lookup[(1 + age2date):(a + age2date)]])
@@ -2849,8 +2848,6 @@ dAAH <- nimble::nimbleFunction(
            sum(lik_temp[1:a])
 
     llik <- n_ind * log(lik)
-
-
     returnType(double(0))
     if(log) return(llik) else return(exp(llik))    ## return log-likelihood
   })
@@ -2883,12 +2880,12 @@ nimble::registerDistributions(list(
 
 ### for a user-defined distribution
 assign('dAAH', dAAH, envir = .GlobalEnv)
-
+i=73
 dAAH(x = 1,
-      a = df_age_nocwd$ageweeks[i],
-        sex = df_age_nocwd$sexnum[i],
-        age2date = df_age_nocwd$age2date_weeks[i],
-        n_ind = df_age_nocwd$n[i],
+      a = d_fit_age_nocwd$ageweeks[i],
+        sex = d_fit_age_nocwd$sexnum[i],
+        age2date = d_fit_age_nocwd$age2date_weeks[i],
+        n_ind = d_fit_age_nocwd$n[i],
         beta_sex = beta_sex,
         beta0_sus = beta0_sus,
         beta0_inf = beta0_inf,
@@ -2904,31 +2901,26 @@ dAAH(x = 1,
         log = TRUE
         )
 
-# test <- c()
-# for(i in 1:nrow(d_fit_idead)){
-# test[i] <- dNegCapPosMort(
-#         x = 1,
-#         e = d_fit_idead$left_age_e[i],
-#         r = d_fit_idead$right_age_r[i],
-#         s = d_fit_idead$right_age_s[i],
-#         dn1 = d_fit_idead$left_age_e[i],
-#         dn = d_fit_idead$right_age_s[i],
-#         sex = d_fit_idead$sex[i],
-#         age2date = idead_age2date[i],
-#         beta_sex = beta_sex,
-#         beta0_sus = beta0_sus,
-#         beta0_inf = beta0_inf,
-#         age_effect_surv = age_effect_survival_test,
-#         period_effect_surv = period_effect_survival_test,
-#         f_age_foi = f_age_foi,
-#         m_age_foi = m_age_foi,
-#         age_lookup_f = age_lookup_col_f,
-#         age_lookup_m = age_lookup_col_m,
-#         period_lookup = period_lookup,
-#         f_period_foi = f_period_foi,
-#         m_period_foi = m_period_foi,
-#         space = 0,
-#         log = TRUE
-#         )
-#  }
-# test
+test <- c()
+for(i in 1:nrow(d_fit_age_nocwd)){
+test[i] <- dAAH(x = 1,
+                a = d_fit_age_nocwd$ageweeks[i],
+                sex = d_fit_age_nocwd$sexnum[i],
+                age2date = d_fit_age_nocwd$age2date_weeks[i],
+                n_ind = d_fit_age_nocwd$n[i],
+                beta_sex = beta_sex,
+                beta0_sus = beta0_sus,
+                beta0_inf = beta0_inf,
+                age_effect_surv = age_effect_survival_test,
+                period_effect_surv = period_effect_survival_test,
+                f_age_foi = f_age_foi,
+                m_age_foi = m_age_foi,
+                age_lookup_f = age_lookup_col_f,
+                age_lookup_m = age_lookup_col_m,
+                period_lookup = period_lookup,
+                f_period_foi = f_period_foi,
+                m_period_foi = m_period_foi,
+                log = TRUE
+                )
+ }
+test
