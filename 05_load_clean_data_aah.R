@@ -316,6 +316,22 @@ fawndoe_df <- fawndoe_df[fawndoe_df$year<2017,]
 df_camtrap_fd <- read.csv("~/Documents/Data/fawn_doe_ratio/Iowa_FDR_2017-2021_with_sd.csv")
 
 
+fd_older_df <- read_excel("~/Documents/Data/fawn_doe_ratio/SW_FDR_1992-2015.xlsx",1)
+fd_older_df  <- fd_older_df%>%filter(year>1991 & year < 1997)
+fd_older_df
+
+names(fd_older_df) <- c("spatial.unit","year","overall_fawn","overall_doe","overall_fd")
+for(j in 1:5){
+    fawndoe_df[nrow(fawndoe_df)+1,] <- NA
+}
+indx_add <- which(is.na(fawndoe_df$year))
+
+fawndoe_df$year[indx_add] <- fd_older_df$year
+fawndoe_df$overall_doe[indx_add] <- fd_older_df$overall_doe
+fawndoe_df$overall_fawn[indx_add] <- fd_older_df$overall_fawn
+fawndoe_df$overall_fd[indx_add] <- fd_older_df$overall_fd
+fawndoe_df <- fawndoe_df[order(fawndoe_df$year),]
+
 
 # ##########################################
 # ### moment matching functions
