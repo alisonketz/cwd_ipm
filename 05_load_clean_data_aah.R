@@ -179,6 +179,33 @@ Cage <- Cage_sus + Cage_inf
 Cage[,2,6] <- Cage[,2,6] + Cage[,2,7]
 Cage[,2,7] <- 0
 
+####################################################################################
+###
+### Total harvest data
+###
+#####################################################################################
+class(df_age_nocwd$age)
+
+df_age_nocwd$agemonths <- df_age_nocwd$age
+df_age_nocwd$ageweeks <- df_age_nocwd$age
+
+
+levels(df_age_nocwd$ageweeks) <- c(floor(as.duration(ymd("2014-05-15") %--% ymd("2015-11-30"))/dweeks(1)),#1
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2016-11-30"))/dweeks(1)),#2
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2017-11-30"))/dweeks(1)),#3
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2018-11-30"))/dweeks(1)),#4
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2020-11-30"))/dweeks(1)),#6
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2023-11-30"))/dweeks(1)),#9
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2014-11-30"))/dweeks(1)))#0
+
+levels(df_age_nocwd$agemonths) <- c(floor(as.duration(ymd("2014-05-15") %--% ymd("2015-11-30"))/dmonths(1)),#1
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2016-11-30"))/dmonths(1)),#2
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2017-11-30"))/dmonths(1)),#3
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2018-11-30"))/dmonths(1)),#4
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2020-11-30"))/dmonths(1)),#6
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2023-11-30"))/dmonths(1)),#9
+                                    floor(as.duration(ymd("2014-05-15") %--% ymd("2014-11-30"))/dmonths(1)))#0
+
 
 ####################################################################################
 ###
