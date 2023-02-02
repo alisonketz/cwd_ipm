@@ -87,21 +87,23 @@ source("07_format_data_combine_foi_surv.R")
 source("08_prelim_survival.R")
 source("09_prelim_foi.R")
 source("10_prelim_collar_foi.R")
+source("11_prelim_aah.R")
+
 
 ###########################################################
 ### Run model
 ###########################################################
-source("11_distributions_check.R")
-source("11_distributions.R")
+source("12_distributions_check.R")
+source("12_distributions.R")
 
 ###########################################################
 ### Run model
 ###########################################################
 
-source("12_run_model.R")
+source("13_run_model.R")
 
 ###########################################################
 ### Post processing
 ###########################################################
 
-source("13_post_process.R")
+source("14_post_process.R")
