@@ -181,7 +181,7 @@ Cage[,2,7] <- 0
 
 ####################################################################################
 ###
-### Total harvest data
+### setting up aah harvest data for estimating period effects
 ###
 #####################################################################################
 class(df_age_nocwd$age)
@@ -206,6 +206,10 @@ levels(df_age_nocwd$agemonths) <- c(floor(as.duration(ymd("2014-05-15") %--% ymd
                                     floor(as.duration(ymd("2014-05-15") %--% ymd("2023-11-30"))/dmonths(1)),#9
                                     floor(as.duration(ymd("2014-05-15") %--% ymd("2014-11-30"))/dmonths(1)))#0
 
+# sex=0=females, sex=1=males
+df_age_nocwd$sexnum <- as.factor(df_age_nocwd$sex)
+levels(df_age_nocwd$sexnum) <- c(0,1)
+df_age_nocwd$sexnum <- as.numeric(df_age_nocwd$sexnum)
 
 ####################################################################################
 ###
@@ -282,6 +286,7 @@ Ototal_sus  <-  Ototal
 
 nysus <- dim(Ototal_sus)[1]
 nyinf <- dim(Ototal_inf)[1]
+
 #removing infected deer from the susceptible harvest deer overall
 Ototal_sus$antlered[(nysus-nyinf+1):nysus] <- Ototal_sus$antlered[(nysus-nyinf+1):nysus] - Ototal_inf$antlered
 Ototal_sus$antlerless[(nysus-nyinf+1):nysus] <- Ototal_sus$antlerless[(nysus-nyinf+1):nysus]  - Ototal_inf$antlerless
@@ -342,7 +347,6 @@ fawndoe_df <- fawndoe_df[fawndoe_df$year<2017,]
 #2017-2021
 df_camtrap_fd <- read.csv("~/Documents/Data/fawn_doe_ratio/Iowa_FDR_2017-2021_with_sd.csv")
 
-
 fd_older_df <- read_excel("~/Documents/Data/fawn_doe_ratio/SW_FDR_1992-2015.xlsx",1)
 fd_older_df  <- fd_older_df%>%filter(year>1991 & year < 1997)
 fd_older_df
@@ -358,80 +362,6 @@ fawndoe_df$overall_doe[indx_add] <- fd_older_df$overall_doe
 fawndoe_df$overall_fawn[indx_add] <- fd_older_df$overall_fawn
 fawndoe_df$overall_fd[indx_add] <- fd_older_df$overall_fd
 fawndoe_df <- fawndoe_df[order(fawndoe_df$year),]
-
-
-# ##########################################
-# ### moment matching functions
-# ##########################################
-
-# lognormal_moments <- function(barx,s){
-# 	mu <- log(barx / sqrt((s^2) / (barx^2) + 1))
-# 	sigma <- sqrt(log((s^2) / (barx^2) + 1))
-# 	return(list(mu=mu,sigma=sigma))
-# }
-
-# gamma_moments <- function(mu,sigma){
-# 	alpha <- (mu^2)/(sigma^2)
-# 	beta <- mu/(sigma^2)
-# 	return(list(alpha=alpha,beta=beta))
-# }
-# ##########################################
-# ### calculate moments 
-# ##########################################
-
-# ##########################
-# ### Option 2: lognormal
-# ##########################
-
-# fdr_ct_moments_2017_2021 <- lognormal_moments(df_camtrap_fd$fdr_mean,df_camtrap_fd$fdr_sd)
-
-# #how to set the sd for the years without uncertainty?
-# #approximate using the mean of the estimates from Jen's method and doubling it?
-# mean(df_camtrap_fd$fdr_sd)*2
-
-# # fdr_ct_moments_2002_2016 <- lognormal_moments(fawndoe_df$overall_fd,mean(df_camtrap_fd$fdr_sd)*2)
-# fdr_ct_moments_1997_2016 <- lognormal_moments(fawndoe_df$overall_fd,mean(df_camtrap_fd$fdr_sd)*2)
-
-
-# # obs_ct_fd_mu  <- c(fdr_ct_moments_2002_2016$mu,fdr_ct_moments_2017_2021$mu)
-# # obs_ct_fd_sd <- c(fdr_ct_moments_2002_2016$sigma,fdr_ct_moments_2017_2021$sigma)
-
-# obs_ct_fd_mu  <- c(fdr_ct_moments_1997_2016$mu,fdr_ct_moments_2017_2021$mu)
-# obs_ct_fd_sd <- c(fdr_ct_moments_1997_2016$sigma,fdr_ct_moments_2017_2021$sigma)
-
-
-# ##########################
-# ### Option 3: gamma
-# ##########################
-
-# # fdr_ct_gam_moments_2002_2016 <- gamma_moments(fawndoe_df$overall_fd,mean(df_camtrap_fd$fdr_sd)*2)
-# fdr_ct_gam_moments_1997_2016 <- gamma_moments(fawndoe_df$overall_fd,mean(df_camtrap_fd$fdr_sd)*2)
-# fdr_ct_gam_moments_2017_2021 <- gamma_moments(df_camtrap_fd$fdr_mean,df_camtrap_fd$fdr_sd)
-
-# # obs_ct_fd_alpha  <- c(fdr_ct_gam_moments_2002_2016$alpha,fdr_ct_gam_moments_2017_2021$alpha)
-# # obs_ct_fd_beta <- c(fdr_ct_gam_moments_2002_2016$beta,fdr_ct_gam_moments_2017_2021$beta)
-
-
-# obs_ct_fd_alpha  <- c(fdr_ct_gam_moments_1997_2016$alpha,fdr_ct_gam_moments_2017_2021$alpha)
-# obs_ct_fd_beta <- c(fdr_ct_gam_moments_1997_2016$beta,fdr_ct_gam_moments_2017_2021$beta)
-
-# # fec_init <- c(fawndoe_df$overall_fd,df_camtrap_fd$fdr_mean)
-# #setting the first 5 years 1992-1996 to be the same as 1997
-# obs_ct_fd_alpha  <- c(rep(obs_ct_fd_alpha[1],5),obs_ct_fd_alpha)
-# obs_ct_fd_beta <- c(rep(obs_ct_fd_beta[1],5),obs_ct_fd_beta)
-
-# ###
-# ### repeating fawn:doe ratios from 1997, to cover the fact that I currently don't have
-# ### data on f:d for 1992-1996
-
-# for(i in 1:5){
-#     fawndoe_df <- rbind(fawndoe_df[1,],fawndoe_df)
-# }
-# fawndoe_df$year[1:5] <-1992:1996 
-
-
-# fec_init <- c(rep(fawndoe_df$overall_fd[1],5),fawndoe_df$overall_fd,df_camtrap_fd$fdr_mean)
-
 
 
 
